@@ -70,6 +70,7 @@ def check_transaction(money_received, drink_cost):
     return True
 
 def make_coffee(drink_name, ingredients):
+    """Deducts the required ingredients from resources and serves the drink."""
     for item in ingredients:
         resources[item] -= ingredients[item]
     print(f"Here is your {drink_name}. Enjoy!")
