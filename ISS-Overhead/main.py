@@ -71,7 +71,6 @@ while True:
                         to_addrs=MY_EMAIL,
                         msg="Subject:Look Up!\n\nThe ISS is above you in the sky!"
                     )
-                print(f"Email sent at {now}")
                 last_sent_time = now  # Update last sent time
             except Exception as e:
                 print(f"Email error: {e}")
