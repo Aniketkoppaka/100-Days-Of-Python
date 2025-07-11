@@ -2,17 +2,15 @@ import requests
 from datetime import datetime
 
 # ====================== CONFIGURATION ======================
-USERNAME = "YOUR_USERNAME"
-TOKEN = "YOUR_SECRET_TOKEN"
-GRAPH_ID = "your-graph-id"  # e.g., "cycling1"
-
-PIXELA_ENDPOINT = "https://pixe.la/v1/users"
+USERNAME = input("Enter your Pixela username: ")
+TOKEN = input("Enter your Pixela token (keep this secret!): ")
 HEADERS = {"X-USER-TOKEN": TOKEN}
+PIXELA_ENDPOINT = "https://pixe.la/v1/users"
 
 # ====================== FUNCTION DEFINITIONS ======================
 
 def create_user():
-    """Create a new Pixela user."""
+    """Creates a new Pixela user."""
     user_params = {
         "token": TOKEN,
         "username": USERNAME,
@@ -22,63 +20,95 @@ def create_user():
     response = requests.post(url=PIXELA_ENDPOINT, json=user_params)
     print(response.text)
 
-def create_graph(graph_id, name="My Graph", unit="Km", data_type="float", color="ajisai"):
-    """Create a new graph under the user's account."""
-    graph_endpoint = f"{PIXELA_ENDPOINT}/{USERNAME}/graphs"
+def create_graph():
+    """Prompts user to create a new graph for any activity."""
+    graph_id = input("Enter a graph ID (unique, no spaces): ")
+    name = input("What activity are you tracking? (e.g., Reading, Coding): ")
+    unit = input("Enter the unit (e.g., pages, hours, km): ")
+    data_type = input("Enter data type (int, float, or string): ")
+    color = input("Choose a graph color (shibafu, momiji, sora, ichou, ajisai, kuro): ")
+
     graph_config = {
         "id": graph_id,
         "name": name,
         "unit": unit,
         "type": data_type,
-        "color": color,
+        "color": color
     }
+
+    graph_endpoint = f"{PIXELA_ENDPOINT}/{USERNAME}/graphs"
     response = requests.post(url=graph_endpoint, json=graph_config, headers=HEADERS)
     print(response.text)
 
-def add_pixel(graph_id, date, quantity):
-    """Add a new pixel entry to the graph."""
-    pixel_endpoint = f"{PIXELA_ENDPOINT}/{USERNAME}/graphs/{graph_id}"
+def add_pixel():
+    """Adds a new pixel to the specified graph."""
+    graph_id = input("Enter the graph ID to add data to: ")
+    date = input("Enter the date (YYYYMMDD) or press Enter for today: ")
+    if not date:
+        date = datetime.now().strftime("%Y%m%d")
+    quantity = input("Enter the quantity for today: ")
+
     pixel_data = {
         "date": date,
-        "quantity": str(quantity),
+        "quantity": str(quantity)
     }
+
+    pixel_endpoint = f"{PIXELA_ENDPOINT}/{USERNAME}/graphs/{graph_id}"
     response = requests.post(url=pixel_endpoint, json=pixel_data, headers=HEADERS)
     print(response.text)
 
-def update_pixel(graph_id, date, quantity):
-    """Update an existing pixel entry."""
-    update_endpoint = f"{PIXELA_ENDPOINT}/{USERNAME}/graphs/{graph_id}/{date}"
-    new_data = {
-        "quantity": str(quantity)
+def update_pixel():
+    """Updates an existing pixel in the specified graph."""
+    graph_id = input("Enter the graph ID: ")
+    date = input("Enter the date to update (YYYYMMDD): ")
+    new_quantity = input("Enter the new quantity: ")
+
+    update_data = {
+        "quantity": str(new_quantity)
     }
-    response = requests.put(url=update_endpoint, json=new_data, headers=HEADERS)
+
+    update_endpoint = f"{PIXELA_ENDPOINT}/{USERNAME}/graphs/{graph_id}/{date}"
+    response = requests.put(url=update_endpoint, json=update_data, headers=HEADERS)
     print(response.text)
 
-def delete_pixel(graph_id, date):
-    """Delete a pixel entry."""
+def delete_pixel():
+    """Deletes a pixel from the specified graph."""
+    graph_id = input("Enter the graph ID: ")
+    date = input("Enter the date to delete (YYYYMMDD): ")
+
     delete_endpoint = f"{PIXELA_ENDPOINT}/{USERNAME}/graphs/{graph_id}/{date}"
     response = requests.delete(url=delete_endpoint, headers=HEADERS)
     print(response.text)
 
-# ====================== USAGE EXAMPLES ======================
+# ====================== MAIN MENU ======================
 
-# Format today's date
-today = datetime.now().strftime("%Y%m%d")
+def main():
+    while True:
+        print("\n=== Pixela Activity Tracker ===")
+        print("1. Create a new Pixela user")
+        print("2. Create a new graph for any activity")
+        print("3. Add a pixel (log activity)")
+        print("4. Update a pixel")
+        print("5. Delete a pixel")
+        print("6. Exit")
 
-# Uncomment and run the following functions as needed:
+        choice = input("Choose an option (1-6): ")
 
-# Step 1: Create a new user (run only once)
-# create_user()
+        if choice == '1':
+            create_user()
+        elif choice == '2':
+            create_graph()
+        elif choice == '3':
+            add_pixel()
+        elif choice == '4':
+            update_pixel()
+        elif choice == '5':
+            delete_pixel()
+        elif choice == '6':
+            print("Exiting Pixela Tracker. Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please enter a number between 1 and 6.")
 
-# Step 2: Create a graph (run once per graph)
-# create_graph(GRAPH_ID, name="Cycling Tracker", unit="Km", data_type="float", color="ajisai")
-
-# Step 3: Add pixel for today
-# kms = input("How many kilometers did you cycle today? ")
-# add_pixel(GRAPH_ID, today, kms)
-
-# Step 4: Update today's pixel (if needed)
-# update_pixel(GRAPH_ID, today, 5.0)
-
-# Step 5: Delete today's pixel (if needed)
-# delete_pixel(GRAPH_ID, today)
+if __name__ == "__main__":
+    main()
