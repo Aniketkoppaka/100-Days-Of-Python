@@ -12,7 +12,6 @@ class NotificationManager:
     """
 
     def __init__(self):
-        # Use os.environ.get() with () not [] — you had a syntax error
         # Initializes the Twilio client with credentials from environment variables
         self.client = Client(
             os.environ.get("TWILIO_SID"),
