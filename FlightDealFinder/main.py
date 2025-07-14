@@ -11,6 +11,7 @@ flight_search = FlightSearch()
 notification_manager = NotificationManager()
 
 ORIGIN_CITY_IATA = "YOUR CITY IATA CODE"
+CURRENCY = "YOUR CURRENCY"
 
 for row in sheet_data:
     if sheet_data[0]["iataCode"] == "":
@@ -38,7 +39,7 @@ for destination in sheet_data:
     if cheapest_flight.price != "N/A" and cheapest_flight.price < destination["lowestPrice"]:
         print(f"Lower price flight found to {destination['city']}!")
         notification_manager.send_sms(
-             message_body=f"Low price alert! Only £{cheapest_flight.price} to fly "
+             message_body=f"Low price alert! Only {CURRENCY}{cheapest_flight.price} to fly "
                           f"from {cheapest_flight.origin_airport} to {cheapest_flight.destination_airport}, "
                           f"on {cheapest_flight.out_date} until {cheapest_flight.return_date}."
         )
