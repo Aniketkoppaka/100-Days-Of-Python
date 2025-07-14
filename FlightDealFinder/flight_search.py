@@ -1,24 +1,37 @@
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 from dotenv import load_dotenv
 
+# Load environment variables from .env file
 load_dotenv()
+CURRENCY = "YOUR CURRENCY CODE"
 
+# Amadeus API endpoints
 IATA_ENDPOINT = "https://test.api.amadeus.com/v1/reference-data/locations/cities"
 FLIGHT_ENDPOINT = "https://test.api.amadeus.com/v2/shopping/flight-offers"
 AMADEUS_ENDPOINT = "https://test.api.amadeus.com/v1/security/oauth2/token"
 
 class FlightSearch:
+    """
+    Handles communication with the Amadeus API for fetching IATA codes and flight offers.
+    """
 
     def __init__(self):
+        # Load credentials from environment
         self._api_key = os.environ["AMADEUS_API_KEY"]
         self._api_secret = os.environ["AMADEUS_SECRET"]
-        self._token = self._get_new_token()
+        self._token = None
+        self._token_expiry = datetime.min
 
-    def _get_new_token(self):
+        # Immediately get a fresh token on initialization
+        self._refresh_token()
 
-        header = {
+    def _refresh_token(self):
+        """
+        Requests a new access token using client credentials flow.
+        """
+        headers = {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
 
@@ -28,20 +41,29 @@ class FlightSearch:
             'client_secret': self._api_secret
         }
 
-        response = requests.post(url=AMADEUS_ENDPOINT, headers=header, data=body)
+        response = requests.post(url=AMADEUS_ENDPOINT, headers=headers, data=body)
+        response.raise_for_status()
 
+        token_data = response.json()
+        self._token = token_data['access_token']
+        self._token_expiry = datetime.now() + timedelta(seconds=token_data['expires_in'])
 
-        print(f"Your token is {response.json()['access_token']}")
-        print(f"Your token expires in {response.json()['expires_in']} seconds")
-        return response.json()['access_token']
+        print(f"[Token] New token acquired, expires in {token_data['expires_in']} seconds")
 
+    def _get_headers(self):
+        """
+        Ensures token is fresh and returns authorization headers.
+        """
+        if datetime.now() >= self._token_expiry:
+            print("[Token] Expired, refreshing...")
+            self._refresh_token()
+        return {'Authorization': f'Bearer {self._token}'}
 
     def get_destination_code(self, city_name):
-        print(f"Using this token to get destination {self._token}")
-
-        header = {
-            'Authorization': f'Bearer {self._token}'
-        }
+        """
+        Given a city name, returns the IATA code for the main airport in that city.
+        """
+        headers = self._get_headers()
 
         query = {
             'keyword': city_name,
@@ -49,22 +71,25 @@ class FlightSearch:
             'include': "AIRPORTS",
         }
 
-        response = requests.get(url=IATA_ENDPOINT, headers=header, params=query)
-        print(f"Status code {response.status_code}. Airport IATA: {response.text}")
-        try:
-            destination_code = response.json()["data"][0]['iataCode']
-        except IndexError:
-            print(f"IndexError: No airport code found for {city_name}.")
-            return "N/A"
-        except KeyError:
-            print(f"KeyError: No airport code found for {city_name}.")
-            return "Not Found"
+        response = requests.get(url=IATA_ENDPOINT, headers=headers, params=query)
 
-        return destination_code
+        if response.status_code != 200:
+            print(f"[Error] Failed to fetch IATA code for {city_name}. Status: {response.status_code}")
+            print(response.text)
+            return "N/A"
+
+        try:
+            return response.json()["data"][0]['iataCode']
+        except (IndexError, KeyError):
+            print(f"[Error] No valid airport code found for {city_name}")
+            return "N/A"
 
     def check_flights(self, origin_city_code, destination_city_code, from_time, to_time):
-
-        headers = {"Authorization": f"Bearer {self._token}"}
+        """
+        Fetches flight offers between origin and destination within the specified date range.
+        Returns JSON data with flight options or None if request fails.
+        """
+        headers = self._get_headers()
 
         query = {
             "originLocationCode": origin_city_code,
@@ -73,19 +98,15 @@ class FlightSearch:
             "returnDate": to_time.strftime("%Y-%m-%d"),
             "adults": 1,
             "nonStop": "true",
-            "currencyCode": "GBP",
+            "currencyCode": CURRENCY,
             "max": "10",
         }
 
         response = requests.get(url=FLIGHT_ENDPOINT, headers=headers, params=query)
 
         if response.status_code != 200:
-            print(f"check_flights() response code: {response.status_code}")
-            print("There was a problem with the flight search.\n"
-                  "For details on status codes, check the API documentation:\n"
-                  "https://developers.amadeus.com/self-service/category/flights/api-doc/flight-offers-search/api"
-                  "-reference")
-            print("Response body:", response.text)
+            print(f"[Error] check_flights() failed. Status: {response.status_code}")
+            print("Response:", response.text)
             return None
 
         return response.json()
