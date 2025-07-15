@@ -84,7 +84,7 @@ class FlightSearch:
             print(f"[Error] No valid airport code found for {city_name}")
             return "N/A"
 
-    def check_flights(self, origin_city_code, destination_city_code, from_time, to_time):
+    def check_flights(self, origin_city_code, destination_city_code, from_time, to_time, is_direct=True):
         """
         Fetches flight offers between origin and destination within the specified date range.
         Returns JSON data with flight options or None if request fails.
@@ -97,7 +97,7 @@ class FlightSearch:
             "departureDate": from_time.strftime("%Y-%m-%d"),
             "returnDate": to_time.strftime("%Y-%m-%d"),
             "adults": 1,
-            "nonStop": "true",
+            "nonStop": "true" if is_direct else "false",
             "currencyCode": CURRENCY,
             "max": "10",
         }
