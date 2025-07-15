@@ -1,12 +1,11 @@
 import os
+from pprint import pprint
 import requests
 from requests.auth import HTTPBasicAuth
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
-
-SHEETY_PRICES_ENDPOINT = os.environ.get("SHEETY_PRICES_ENDPOINT")
 
 class DataManager:
     """
@@ -15,14 +14,17 @@ class DataManager:
 
     def __init__(self):
         # Read Sheety credentials from environment variables
-        self._user = os.environ["SHEETY_USERNAME"]
-        self._password = os.environ["SHEETY_PASSWORD"]
+        self._user = os.environ.get("SHEETY_USERNAME")
+        self._password = os.environ.get("SHEETY_PASSWORD")
+        self.prices_endpoint = os.environ.get("SHEETY_PRICES_ENDPOINT")
+        self.users_endpoint = os.environ.get("SHEETY_USERS_ENDPOINT")
 
         # Basic Auth setup for Sheety
         self._authorization = HTTPBasicAuth(self._user, self._password)
 
         # Placeholder for fetched destination data
         self.destination_data = {}
+        self.customer_data = {}
 
     def get_destination_data(self):
         """
@@ -60,3 +62,11 @@ class DataManager:
                 print(f"[Success] Updated {city['city']} with IATA: {city['iataCode']}")
             except requests.RequestException as e:
                 print(f"[Error] Failed to update {city['city']}: {e}")
+                
+    def get_customer_emails(self):
+        response = requests.get(url=self.users_endpoint)
+        data = response.json()
+        self.customer_data = data["users"]
+        return self.customer_data
+
+  
