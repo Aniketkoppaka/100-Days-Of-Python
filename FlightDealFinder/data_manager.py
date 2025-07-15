@@ -1,5 +1,4 @@
 import os
-from pprint import pprint
 import requests
 from requests.auth import HTTPBasicAuth
 from dotenv import load_dotenv
@@ -9,31 +8,31 @@ load_dotenv()
 
 class DataManager:
     """
-    Handles interactions with the Sheety API to fetch and update flight destination data.
+    Handles fetching and updating destination and user data using Sheety API.
     """
 
     def __init__(self):
-        # Read Sheety credentials from environment variables
+        # Read Sheety credentials and endpoints from environment variables
         self._user = os.environ.get("SHEETY_USERNAME")
         self._password = os.environ.get("SHEETY_PASSWORD")
         self.prices_endpoint = os.environ.get("SHEETY_PRICES_ENDPOINT")
         self.users_endpoint = os.environ.get("SHEETY_USERS_ENDPOINT")
 
-        # Basic Auth setup for Sheety
+        # Setup for Basic Auth
         self._authorization = HTTPBasicAuth(self._user, self._password)
 
-        # Placeholder for fetched destination data
+        # Cached data placeholders
         self.destination_data = {}
         self.customer_data = {}
 
     def get_destination_data(self):
         """
-        Fetches destination data (including city names and IATA codes) from Sheety.
+        Fetch destination data (city, IATA code, price) from Sheety.
         Returns a list of destination records.
         """
         try:
-            response = requests.get(url=SHEETY_PRICES_ENDPOINT, auth=self._authorization)
-            response.raise_for_status()  # Raise an error for bad HTTP responses
+            response = requests.get(url=self.prices_endpoint, auth=self._authorization)
+            response.raise_for_status()
             data = response.json()
             self.destination_data = data["prices"]
             return self.destination_data
@@ -43,8 +42,8 @@ class DataManager:
 
     def update_destination_codes(self):
         """
-        Updates the IATA code for each destination in the Sheety sheet.
-        Expects `self.destination_data` to be populated with city info.
+        Update the IATA codes in the Google Sheet via Sheety API.
+        Requires self.destination_data to be populated first.
         """
         for city in self.destination_data:
             new_data = {
@@ -54,7 +53,7 @@ class DataManager:
             }
             try:
                 response = requests.put(
-                    url=f"{SHEETY_PRICES_ENDPOINT}/{city['id']}",
+                    url=f"{self.prices_endpoint}/{city['id']}",
                     json=new_data,
                     auth=self._authorization
                 )
@@ -62,11 +61,18 @@ class DataManager:
                 print(f"[Success] Updated {city['city']} with IATA: {city['iataCode']}")
             except requests.RequestException as e:
                 print(f"[Error] Failed to update {city['city']}: {e}")
-                
-    def get_customer_emails(self):
-        response = requests.get(url=self.users_endpoint)
-        data = response.json()
-        self.customer_data = data["users"]
-        return self.customer_data
 
-  
+    def get_customer_emails(self):
+        """
+        Fetches user emails from Sheety for notification purposes.
+        Returns a list of users with their emails.
+        """
+        try:
+            response = requests.get(url=self.users_endpoint, auth=self._authorization)
+            response.raise_for_status()
+            data = response.json()
+            self.customer_data = data["users"]
+            return self.customer_data
+        except requests.RequestException as e:
+            print(f"[Error] Failed to fetch customer emails: {e}")
+            return []
