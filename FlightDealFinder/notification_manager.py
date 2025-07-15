@@ -16,7 +16,7 @@ class NotificationManager:
         self.email_password = os.environ["MY_EMAIL_PASSWORD"]
 
         self.twilio_virtual_number = os.environ["TWILIO_VIRTUAL_NUMBER"]
-        self.twilio_verified_number = os.environ["YOUR_PHONE_NUMBER"]
+        self.twilio_verified_number = os.environ["MY_PHONE_NUMBER"]
 
         # --- Initialize Twilio Client ---
         self.client = Client(
