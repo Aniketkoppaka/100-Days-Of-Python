@@ -70,8 +70,8 @@ for destination in sheet_data:
             ORIGIN_CITY_IATA,
             destination["iataCode"],
             from_time=tomorrow,
-            to_time=six_months_from_today,  # ✅ Fixed typo here
-            is_direct=False  # Make sure your method supports this
+            to_time=six_months_from_today,  
+            is_direct=False  
         )
         cheapest_flight = find_cheapest_flight(stopover_flights)
         print(f"Cheapest indirect flight price is: {CURRENCY}{cheapest_flight.price}")
