@@ -32,6 +32,9 @@ print(f"sheet_data:\n {sheet_data}")
 data_manager.destination_data = sheet_data
 data_manager.update_destination_codes()
 
+customer_data = data_manager.get_customer_emails()
+customer_email_list = [row["Email"] for row in customer_data]
+
 # --- SET DATE RANGE FOR SEARCH ---
 
 # Set the date range: from tomorrow to 6 months ahead
