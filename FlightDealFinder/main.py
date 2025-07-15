@@ -57,6 +57,18 @@ for destination in sheet_data:
     print(f"{destination['city']}: {CURRENCY}{cheapest_flight.price}")
     time.sleep(2)  # Pause to avoid API rate limits
 
+    if cheapest_flight.price == "N/A":
+        print(f"No direct flight to {destination['city']}. Looking for indirect flights...")
+        stopover_flights = flight_search.check_flights(
+            ORIGIN_CITY_IATA,
+            destination["iataCode"],
+            from_time=tomorrow,
+            to_time=six_month_from_today,
+            is_direct=False
+        )
+        cheapest_flight = find_cheapest_flight(stopover_flights)
+        print(f"Cheapest indirect flight price is: {CURRENCY}{cheapest_flight.price}")
+
     # If the new flight is cheaper than what’s in the sheet, send an SMS alert
     if isinstance(cheapest_flight.price, (int, float)) and cheapest_flight.price < destination["lowestPrice"]:
         print(f"Lower price flight found to {destination['city']}!")
