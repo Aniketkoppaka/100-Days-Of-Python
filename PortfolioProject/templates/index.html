@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aniket | Personal Portfolio</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Exo+2:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome (Updated Link) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body data-bs-spy="scroll" data-bs-target="#main-nav" data-bs-offset="80">
+
+    <!-- Canvas for Starfield Background -->
+    <canvas id="starfield"></canvas>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <!-- Header -->
+    <nav id="main-nav" class="navbar navbar-expand-lg navbar-dark fixed-top site-header">
+        <div class="container-fluid">
+            <!-- SVG Logo Implementation -->
+            <a class="navbar-brand" href="#">
+                <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 15L85 85H15L50 15Z" stroke="white" stroke-width="8" stroke-linejoin="round"/>
+                    <path d="M32 60H68" stroke="white" stroke-width="8" stroke-linecap="round"/>
+                    <ellipse cx="50" cy="58" rx="40" ry="12" stroke="#a855f7" stroke-width="6"/>
+                </svg>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="#hero">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#skills">Skills</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="vh-100 d-flex align-items-center justify-content-center text-center flex-column position-relative overflow-hidden">
+            <div class="z-10 animate-fade-in-up">
+                <h1 class="display-1 fw-bold text-white mb-4">Hi, I'm Aniket</h1>
+                <p class="h1 text-purple-300">A Creative Developer & Designer</p>
+                <a href="#contact" class="btn btn-primary btn-lg mt-4 rounded-pill">Get In Touch</a>
+            </div>
+        </section>
+
+        <!-- About Me Section -->
+        <section id="about" class="py-5 scroll-reveal">
+            <div class="container">
+                <h2 class="text-center text-white mb-5 display-4">About Me</h2>
+                <div class="row align-items-center">
+                    <div class="col-md-4 text-center">
+                        <img src="../static/images/aboutmeimg.jpg" alt="Aniket" class="img-fluid rounded-circle shadow-lg shadow-purple-500/20">
+                    </div>
+                    <div class="col-md-8">
+                        <p class="lead text-white-50">
+                            Hello! I'm a Computer Science (AIML) student at Manipal University Jaipur with a strong passion for programming and building efficient, user-friendly web applications. My curiosity about how things work sparked my journey into tech, and it continues to drive me as I explore new tools, frameworks, and technologies to create meaningful digital experiences.
+                        </p>
+                        <p class="lead text-white-50">
+                            Outside of coding, you'll often find me at the gym or geeking out over the latest advancements in tech and AI. I'm a firm believer in continuous growth both mentally and physically, and I'm always eager to take on new challenges that push my limits and help me become a better developer and problem-solver.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-5 bg-dark-subtle scroll-reveal">
+            <div class="container">
+                <h2 class="text-center text-white mb-5 display-4">My Work</h2>
+                <div class="row g-4">
+                    <!-- Project Card 1 -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="project-card h-100">
+                            <img src="../static/images/projectimg1.jpg" alt="Project 1" class="card-img-top">
+                            <div class="card-body">
+                                <h3 class="card-title">Personal Blog Website</h3>
+                                <p class="card-text">A personal blog built with Flask, HTML, CSS, and a touch of JavaScript — sharing thoughts, projects, and everything in between.</p>
+                                <a href="https://github.com/Aniketkoppaka/100-Days-Of-Python/tree/main/Blog-website-full" class="btn btn-outline-primary">View Project &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Project Card 2 -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="project-card h-100">
+                            <img src="../static/images/projectimg2.jpg" alt="Project 2" class="card-img-top">
+                            <div class="card-body">
+                                <h3 class="card-title">Flight Deal Finder</h3>
+                                <p class="card-text">A Python-based application that uses APIs to track and deliver the best real-time flight deals for budget-friendly travel.</p>
+                                <a href="https://github.com/Aniketkoppaka/100-Days-Of-Python/tree/main/FlightDealFinder" class="btn btn-outline-primary">View Project &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Project Card 3 -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="project-card h-100">
+                            <img src="../static/images/projectimg3.jpg" alt="Project 3" class="card-img-top">
+                            <div class="card-body">
+                                <h3 class="card-title">Password Manager</h3>
+                                <p class="card-text">A secure password manager built with Python and Tkinter, designed to store and manage your credentials with ease.</p>
+                                <a href="https://github.com/Aniketkoppaka/100-Days-Of-Python/tree/main/PasswordManagerGUI" class="btn btn-outline-primary">View Project &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="py-5 scroll-reveal">
+            <div class="container">
+                <h2 class="text-center text-white mb-5 display-4">Skills & Tools</h2>
+                <div class="d-flex flex-wrap justify-content-center align-items-center gap-4 text-center">
+                    <!-- Skill Item -->
+                    <div class="skill-item">
+                        <div class="skill-icon"><i class="fa-brands fa-python"></i></div>
+                        <span>Python</span>
+                    </div>
+                    <!-- Skill Item -->
+                    <div class="skill-item">
+                        <div class="skill-icon"><i class="fas fa-code"></i></div>
+                        <span>Web Development</span>
+                    </div>
+                    <!-- Skill Item -->
+                    <div class="skill-item">
+                        <div class="skill-icon"><i class="fas fa-cubes-stacked"></i></div>
+                        <span>APIs & JSON</span>
+                    </div>
+                    <!-- Skill Item -->
+                    <div class="skill-item">
+                        <div class="skill-icon"><i class="fas fa-magnifying-glass-chart"></i></div>
+                        <span>Web Scraping</span>
+                    </div>
+                     <!-- Skill Item -->
+                    <div class="skill-item">
+                        <div class="skill-icon"><i class="fas fa-robot"></i></div>
+                        <span>Task Automation</span>
+                    </div>
+                     <!-- Skill Item -->
+                    <div class="skill-item">
+                        <div class="skill-icon"><i class="fas fa-chart-pie"></i></div>
+                        <span>Data Analysis</span>
+                    </div>
+                    <!-- Skill Item -->
+                    <div class="skill-item">
+                        <div class="skill-icon"><i class="fas fa-flask"></i></div>
+                        <span>Flask</span>
+                    </div>
+                     <!-- Skill Item -->
+                    <div class="skill-item">
+                        <div class="skill-icon"><i class="fa-brands fa-github"></i></div>
+                        <span>Github</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-5 bg-dark-subtle scroll-reveal">
+            <div class="container">
+                <h2 class="text-center text-white mb-5 display-4">Contact Me</h2>
+                <div class="row justify-content-center">
+                    <!-- Contact Info Column -->
+                    <div class="col-lg-8 text-center">
+                        <p class="lead text-white-50">
+                            I'm always on the lookout to work with new clients on exciting projects. If you're interested in collaborating with me, please get in touch in one of the following ways.
+                        </p>
+                        <ul class="list-unstyled contact-info mt-4 d-inline-block text-start">
+                            <li>
+                                <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                                <span>Hyderabad, Telangana, India</span>
+                            </li>
+                            <li>
+                                <div class="contact-icon"><i class="fas fa-phone"></i></div>
+                                <span>+91 72072 *****</span>
+                            </li>
+                            <li>
+                                <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                                <span>aniketkoppaka@gmail.com</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer py-5 mt-auto">
+        <div class="container text-center">
+            <div class="social-icons mb-3">
+                <a href="https://github.com/Aniketkoppaka" class="social-icon"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/aniketveerkoppaka/" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://x.com/AniketKoppaka" class="social-icon"><i class="fa-brands fa-x-twitter"></i></a>
+            </div>
+            <p class="text-white-50 mb-0">&copy; <script type="text/javascript">document.write(new Date().getFullYear());</script> Aniket. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
