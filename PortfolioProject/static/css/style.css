@@ -1,6 +1,3 @@
-/* static/css/style.css */
-
-/* --- Custom Bootstrap Variables & Theme --- */
 :root {
     --bs-primary: #a855f7;
     --bs-primary-rgb: 168, 85, 247;
@@ -232,7 +229,5 @@ h1, h2, h3, h4, h5, h6, .logo-text, .h1 {
 }
 .animate-fade-in-up { animation: fade-in-up 1s ease-out forwards; }
 
-/* --- Scrollspy Fix --- */
-main > section:last-of-type {
-    padding-bottom: 40vh; /* Adds space for the last nav item to be detected */
-}
+
+
