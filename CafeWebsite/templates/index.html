@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% from 'bootstrap5/form.html' import render_form %}
+
+{% block title %}Cafes & Wifi{% endblock %}
+
+{% block content %}
+<div class="p-5 mb-4 rounded-3 hero-section">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Find Your Perfect Coffee Spot</h1>
+        <p class="col-md-8 fs-4">A curated list of the best places to work, relax, and refuel.</p>
+        <a href="{{ url_for('add_cafe') }}" class="btn btn-primary btn-lg">Add Your Cafe</a>
+    </div>
+</div>
+
+<div class="row">
+    {% if cafes %}
+        {% for cafe in cafes %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100">
+                <img class="card-img-top" src="{{ cafe.img_url }}" alt="Image of {{ cafe.name }}">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ cafe.name }}</h5>
+                    <p class="card-text"><strong>Location:</strong> {{ cafe.location }}</p>
+                    <p class="card-text"><strong>Seats:</strong> {{ cafe.seats }}</p>
+                    <p class="card-text"><strong>Coffee Price:</strong> {{ cafe.coffee_price }}</p>
+                    <p class="card-text amenities">
+                        <span>{% if cafe.has_sockets == 'Yes' %}✅{% else %}❌{% endif %} Sockets</span>
+                        <span>{% if cafe.has_toilet == 'Yes' %}✅{% else %}❌{% endif %} Toilet</span>
+                        <span>{% if cafe.has_wifi == 'Yes' %}✅{% else %}❌{% endif %} Wifi</span>
+                        <span>{% if cafe.can_take_calls == 'Yes' %}✅{% else %}❌{% endif %} Calls</span>
+                    </p>
+                    <div class="mt-auto pt-3">
+                        <a href="{{ cafe.map_url }}" class="btn btn-secondary btn-sm" target="_blank">View on Map</a>
+                        <a href="{{ url_for('delete_cafe', cafe_id=cafe.id, api_key=api_key) }}" class="btn btn-danger btn-sm">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No cafes found. Why not add one?</p>
+    {% endif %}
+</div>
+{% endblock %}
