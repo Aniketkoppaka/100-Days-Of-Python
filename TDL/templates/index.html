@@ -1,29 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth" data-theme="synthwave">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo List | Modern & Minimal</title>
+    <title>Todo List</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css" rel="stylesheet" type="text/css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #6366f1;
-            background-image: linear-gradient(to right top, #818cf8, #6366f1, #4f46e5); /* Indigo gradient */
+            background-color: #1e293b;
+            background-image: linear-gradient(to right top, #0f172a, #1e1b4b, #4c1d95);
             overflow: hidden;
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.7);
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        .task-input:focus, .task-input-edit:focus {
-            box-shadow: 0 0 0 3px #a5b4fc;
-            outline: none;
         }
         .task-item {
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
@@ -39,19 +30,13 @@
         .task-item:hover .actions {
             opacity: 1;
         }
-        .custom-checkbox:checked {
-            background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
-            background-color: #4f46e5;
-            border-color: #4f46e5;
-        }
         .completed-task {
-            opacity: 0.6;
+            opacity: 0.5;
         }
         .completed-task .task-text {
             text-decoration: line-through;
-            color: #475569;
+            text-decoration-color: #f97316;
         }
-
         .motivational-bg {
             position: fixed;
             top: 0;
@@ -63,7 +48,7 @@
         }
         .motivational-bg span {
             position: absolute;
-            color: rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.1);
             font-size: 2vw;
             font-weight: 800;
             white-space: nowrap;
@@ -84,9 +69,8 @@
         }
     </style>
 </head>
-<body class="text-slate-800">
+<body>
 
-    <!-- Motivational Background Text -->
     <div class="motivational-bg">
         <span style="top: 10%; left: 5%; --r-from: -15deg; --r-to: 5deg;">The secret of getting ahead...</span>
         <span style="top: 20%; left: 70%; --r-from: 10deg; --r-to: -5deg; animation-delay: -15s;">Keep going.</span>
@@ -97,75 +81,71 @@
         <span style="top: 90%; left: 20%; --r-from: 8deg; --r-to: -2deg; animation-delay: -5s;">Believe you can.</span>
     </div>
 
-    <!-- Main Content Wrapper -->
     <div class="main-content">
         <div class="flex flex-col items-center pt-12 sm:pt-20 px-4 pb-20">
             <div class="w-full max-w-2xl mx-auto">
 
-                <!-- Header -->
                 <header class="text-center mb-10">
                     <h1 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
                         My Tasks
                     </h1>
-                    <p class="mt-3 text-lg text-indigo-200">Stay organized, get things done.</p>
+                    <p class="mt-3 text-lg text-primary-content/70">Stay organized, get things done.</p>
                 </header>
 
-                <!-- Add Task Form -->
-                <div class="glass-card rounded-xl shadow-lg p-4 mb-8">
-                    <form id="add-todo-form" class="flex flex-col sm:flex-row items-center gap-3">
-                        <input type="text" id="task" name="task" placeholder="Add a new task..." required
-                               class="task-input flex-grow w-full px-4 py-3 bg-white/50 border-transparent rounded-lg focus:ring-0 transition">
-                        <input type="text" id="category" name="category" placeholder="Category"
-                               class="task-input w-full sm:w-32 px-4 py-3 bg-white/50 border-transparent rounded-lg focus:ring-0 transition">
-                        <input type="date" id="deadline" name="deadline"
-                               class="task-input w-full sm:w-auto px-4 py-3 bg-white/50 border-transparent rounded-lg focus:ring-0 transition text-slate-500">
-                        <button type="submit" class="w-full sm:w-auto bg-indigo-600 text-white font-semibold px-5 py-3 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-200 shadow-md hover:shadow-lg">
-                            Add
-                        </button>
-                    </form>
+                <div class="card glass shadow-xl mb-8">
+                    <div class="card-body p-4">
+                        <form id="add-todo-form" class="flex flex-col sm:flex-row items-center gap-3">
+                            <input type="text" id="task" name="task" placeholder="Add a new task..." required class="input input-bordered w-full flex-grow" />
+                            <input type="text" id="category" name="category" placeholder="Category" class="input input-bordered w-full sm:w-32" />
+                            <input type="date" id="deadline" name="deadline" class="input input-bordered w-full sm:w-auto" />
+                            <button type="submit" class="btn btn-primary w-full sm:w-auto">Add</button>
+                        </form>
+                    </div>
                 </div>
 
-                <!-- Todo List -->
                 <div id="todo-list" class="space-y-4">
                     {% for todo in todos %}
-                    <div class="task-item glass-card rounded-xl shadow-md p-5 flex items-center justify-between {% if todo.completed %}completed-task{% endif %}" data-id="{{ todo.id }}">
-                        <div class="flex items-center gap-4 flex-grow">
-                            <input type="checkbox" {% if todo.completed %}checked{% endif %} class="custom-checkbox h-6 w-6 rounded-md border-slate-400 focus:ring-indigo-500 cursor-pointer">
-                            <div class="flex-grow">
-                                <p class="task-text font-semibold text-slate-800 text-lg">{{ todo.task }}</p>
-                                <div class="flex items-center gap-4 text-sm text-slate-600 mt-1">
-                                    {% if todo.category %}
-                                    <span class="category-badge bg-indigo-100 text-indigo-800 font-medium">{{ todo.category }}</span>
-                                    {% endif %}
-                                    {% if todo.deadline %}
-                                    <span class="flex items-center gap-1.5">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" /></svg>
-                                        {{ todo.deadline.strftime('%b %d, %Y') }}
-                                    </span>
-                                    {% endif %}
+                    <div class="task-item card glass shadow-md {% if todo.completed %}completed-task{% endif %}" data-id="{{ todo.id }}">
+                        <div class="card-body p-5 flex-row items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <input type="checkbox" {% if todo.completed %}checked{% endif %} class="checkbox checkbox-primary checkbox-md" />
+                                <div>
+                                    <p class="task-text card-title text-lg">{{ todo.task }}</p>
+                                    <div class="flex items-center gap-4 text-sm text-base-content/70 mt-1">
+                                        {% if todo.category %}
+                                        <div class="badge badge-secondary badge-outline">{{ todo.category }}</div>
+                                        {% endif %}
+                                        {% if todo.deadline %}
+                                        <span class="flex items-center gap-1.5">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" /></svg>
+                                            {{ todo.deadline.strftime('%b %d, %Y') }}
+                                        </span>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="actions flex items-center gap-2">
-                            <button class="edit-btn p-2 text-slate-500 hover:text-indigo-600">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg>
-                            </button>
-                            <button class="delete-btn p-2 text-slate-500 hover:text-red-600">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd" /></svg>
-                            </button>
+                            <div class="actions card-actions">
+                                <button class="edit-btn btn btn-ghost btn-square btn-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg>
+                                </button>
+                                <button class="delete-btn btn btn-ghost btn-square btn-sm hover:bg-red-500/20">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd" /></svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
 
-                <!-- Empty State -->
                 <div id="empty-state" class="text-center py-16 {% if todos %}hidden{% endif %}">
-                    <div class="glass-card inline-block p-8 rounded-2xl">
-                        <svg class="mx-auto h-16 w-16 text-indigo-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" stroke-width="1.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <h3 class="mt-4 text-lg font-semibold text-slate-800">All tasks completed!</h3>
-                        <p class="mt-1 text-base text-slate-600">You're all caught up. Add a new task to get started.</p>
+                    <div class="card glass inline-block p-8 shadow-xl">
+                        <div class="card-body items-center text-center">
+                            <svg class="h-16 w-16 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <h3 class="card-title mt-4">All tasks completed!</h3>
+                            <p>You're all caught up. Add a new task to get started.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -173,7 +153,6 @@
     </div>
 
     <script>
-        // All JavaScript remains the same
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('add-todo-form');
             const todoList = document.getElementById('todo-list');
@@ -206,33 +185,35 @@
 
             function createTodoElement(todo) {
                 const div = document.createElement('div');
-                div.className = `task-item glass-card rounded-xl shadow-md p-5 flex items-center justify-between ${todo.completed ? 'completed-task' : ''}`;
+                div.className = `task-item card glass shadow-md ${todo.completed ? 'completed-task' : ''}`;
                 div.dataset.id = todo.id;
 
                 const isOverdue = todo.deadline && !todo.completed && new Date(todo.deadline) < new Date().setHours(0,0,0,0);
 
                 div.innerHTML = `
-                    <div class="flex items-center gap-4 flex-grow">
-                        <input type="checkbox" ${todo.completed ? 'checked' : ''} class="custom-checkbox h-6 w-6 rounded-md border-slate-400 focus:ring-indigo-500 cursor-pointer">
-                        <div class="flex-grow">
-                            <p class="task-text font-semibold text-slate-800 text-lg">${escapeHTML(todo.task)}</p>
-                            <div class="flex items-center gap-4 text-sm text-slate-600 mt-1">
-                                ${todo.category ? `<span class="category-badge bg-indigo-100 text-indigo-800 font-medium">${escapeHTML(todo.category)}</span>` : ''}
-                                ${todo.deadline ? `
-                                    <span class="flex items-center gap-1.5 ${isOverdue ? 'text-red-500 font-semibold' : ''}">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" /></svg>
-                                        ${new Date(todo.deadline + 'T00:00:00').toLocaleDateString()}
-                                    </span>` : ''}
+                    <div class="card-body p-5 flex-row items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <input type="checkbox" ${todo.completed ? 'checked' : ''} class="checkbox checkbox-primary checkbox-md" />
+                            <div>
+                                <p class="task-text card-title text-lg">${escapeHTML(todo.task)}</p>
+                                <div class="flex items-center gap-4 text-sm text-base-content/70 mt-1">
+                                    ${todo.category ? `<div class="badge badge-secondary badge-outline">${escapeHTML(todo.category)}</div>` : ''}
+                                    ${todo.deadline ? `
+                                        <span class="flex items-center gap-1.5 ${isOverdue ? 'text-red-500 font-semibold' : ''}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" /></svg>
+                                            ${new Date(todo.deadline + 'T00:00:00').toLocaleDateString()}
+                                        </span>` : ''}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="actions flex items-center gap-2">
-                         <button class="edit-btn p-2 text-slate-500 hover:text-indigo-600">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg>
-                        </button>
-                        <button class="delete-btn p-2 text-slate-500 hover:text-red-600">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd" /></svg>
-                        </button>
+                        <div class="actions card-actions">
+                            <button class="edit-btn btn btn-ghost btn-square btn-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg>
+                            </button>
+                            <button class="delete-btn btn btn-ghost btn-square btn-sm hover:bg-red-500/20">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd" /></svg>
+                            </button>
+                        </div>
                     </div>
                 `;
                 return div;
@@ -267,7 +248,7 @@
 
                 const id = todoItem.dataset.id;
 
-                if (target.type === 'checkbox') {
+                if (target.matches('.checkbox')) {
                     const completed = target.checked;
                     try {
                         const response = await fetch(`/todos/${id}/complete`, {
@@ -323,7 +304,7 @@
                 const input = document.createElement('input');
                 input.type = 'text';
                 input.value = currentTask;
-                input.className = 'task-input-edit w-full text-lg px-2 py-1 bg-white/80 border border-slate-300 rounded-md';
+                input.className = 'task-input-edit input input-bordered w-full';
 
                 taskTextElement.replaceWith(input);
                 input.focus();
