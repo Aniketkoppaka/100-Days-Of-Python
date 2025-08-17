@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="night">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Color Extractor</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .color-text {
+            text-shadow: 0 0 4px rgba(0,0,0,0.7), 0 0 2px rgba(0,0,0,0.7);
+        }
+        .toast-message {
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+        .toast-message.fade-out {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 bg-base-200">
+
+    <div class="w-full max-w-3xl mx-auto">
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body items-center text-center p-8 md:p-12">
+
+                <h1 class="card-title text-3xl md:text-4xl font-bold">Image Color Palette</h1>
+                <p class="text-base-content/70 mb-6">Upload an image to extract the top 10 dominant colors.</p>
+
+                <form method="POST" enctype="multipart/form-data" class="w-full max-w-md">
+                    <div class="form-control w-full mb-4">
+                        <input type="file" name="file" class="file-input file-input-bordered file-input-primary w-full" accept="image/*" />
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-wide">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-palette-fill" viewBox="0 0 16 16">
+                           <path d="M12.433 10.07C14.133 10.585 16 11.15 16 8a8 8 0 1 0-15.932 1.254 5.5 5.5 0 0 0 5.313 5.125h3.09c.446 0 .872-.073 1.277-.204zM11.5 10.25a1.75 1.75 0 1 1 0-3.5 1.75 1.75 0 0 1 0 3.5zm-4.5 0a1.75 1.75 0 1 1 0-3.5 1.75 1.75 0 0 1 0 3.5zM5.25 6.5a1.75 1.75 0 1 1 0-3.5 1.75 1.75 0 0 1 0 3.5zM8.5 4.5a1.75 1.75 0 1 1 0-3.5 1.75 1.75 0 0 1 0 3.5z"/>
+                        </svg>
+                        Extract Colors
+                    </button>
+                </form>
+
+                {% if error %}
+                    <div role="alert" class="alert alert-error mt-6 max-w-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span><strong>Error:</strong> {{ error }}</span>
+                    </div>
+                {% endif %}
+
+                {% if colors %}
+                    <div class="mt-10 w-full">
+                        <h2 class="text-2xl font-semibold mb-6">Your Color Palette:</h2>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                            {% for color in colors %}
+                                <div class="relative group card shadow-md">
+                                    <div class="w-full h-24 md:h-32 rounded-lg flex items-center justify-center transition-transform transform group-hover:scale-110" style="background-color: {{ color }};">
+                                        <span class="color-text text-white font-mono font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">{{ color }}</span>
+                                    </div>
+                                    <button onclick="copyToClipboard('{{ color }}')" class="absolute top-1 right-1 btn btn-ghost btn-circle btn-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                                            <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="toast toast-end"></div>
+
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(`Copied ${text} to clipboard!`);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
+
+        function showToast(message) {
+            const toastContainer = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'alert alert-success toast-message';
+            toast.setAttribute("role", "alert");
+            toast.innerHTML = `<span>${message}</span>`;
+            toastContainer.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('fade-out');
+                toast.addEventListener('transitionend', () => {
+                    toast.remove();
+                });
+            }, 3000);
+        }
+    </script>
+
+</body>
+</html>
