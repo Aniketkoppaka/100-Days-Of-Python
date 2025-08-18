@@ -1,3 +1,4 @@
+# Make Sure to Change Values Based on Your Screen Settings
 import pyautogui
 from PIL import ImageGrab
 import time
@@ -31,3 +32,4 @@ def play_game():
 
 if __name__ == "__main__":
     play_game()
+
