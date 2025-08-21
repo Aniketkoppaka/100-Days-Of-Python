@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="black">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            background-image: url('https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.4);
+        }
+        .font-poppins {
+            font-family: 'Poppins', sans-serif;
+        }
+        @keyframes slide-fade-in {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-slide-fade-in {
+            animation: slide-fade-in 0.6s ease-out forwards;
+        }
+        .welcome-item {
+            opacity: 0;
+        }
+        #welcome-screen {
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        #app-container {
+            transition: opacity 0.5s ease-out 0.3s, transform 0.5s ease-out 0.3s;
+        }
+        .animate-fade-in {
+            animation: fade-in 0.5s ease-out forwards;
+        }
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-base-200 flex items-center justify-center min-h-screen p-4 {% if not stock_data and not error %}overflow-hidden{% endif %}">
+
+    {% if not stock_data and not error %}
+    <div id="welcome-screen" class="absolute inset-0 flex flex-col items-center justify-center z-20">
+        <div class="text-center space-y-6">
+            <div class="welcome-item" style="animation-delay: 0.1s;">
+                 <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+            </div>
+            <h1 class="text-8xl font-poppins font-bold text-primary welcome-item" style="animation-delay: 0.3s;">Stock Tracker</h1>
+            <p class="py-2 text-xl text-base-content/70 welcome-item" style="animation-delay: 0.5s;">Your window to the market.</p>
+            <div class="welcome-item" style="animation-delay: 0.7s;">
+                <button id="enter-btn" class="btn btn-primary btn-circle btn-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div id="app-container" class="{% if not stock_data and not error %}opacity-0 transform scale-95 pointer-events-none{% endif %}">
+        <div class="card w-full max-w-md bg-base-100 shadow-xl border border-base-300 relative">
+
+            {% if stock_data or error %}
+            <a href="/" class="btn btn-ghost btn-sm btn-circle absolute top-4 left-4 z-10">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+            </a>
+            {% endif %}
+
+            <div class="card-body">
+                <div class="text-center mb-6">
+                    <h1 class="card-title text-3xl font-bold justify-center">Stock Market Tracker</h1>
+                    <p class="text-base-content/70 mt-2">Enter a stock symbol to get the latest end-of-day data.</p>
+                </div>
+
+                <form action="/" method="POST" class="space-y-4">
+                    <div class="form-control">
+                        <label class="input input-bordered flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 opacity-70"><path d="M2.667 3.833A2.333 2.333 0 0 1 5 1.5h6a2.333 2.333 0 0 1 2.333 2.333v8.334A2.333 2.333 0 0 1 11 14.5H5a2.333 2.333 0 0 1-2.333-2.333V3.833Zm2.333.667v.667a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5V4.5a.5.5 0 0 0-.5-.5h-4.5a.5.5 0 0 0-.5.5Z" /></svg>
+                            <input type="text" name="symbol" class="grow" placeholder="e.g., AAPL, GOOGL" />
+                        </label>
+                    </div>
+                    <div class="form-control">
+                        <button type="submit" class="btn btn-primary w-full">
+                            Get Stock Data
+                        </button>
+                    </div>
+                </form>
+
+                <div class="divider my-2">Results</div>
+
+                <div id="results" class="space-y-4">
+                    {% if stock_data %}
+                    <div class="card card-bordered bg-base-200 animate-fade-in">
+                        <div class="card-body p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="card-title text-2xl text-primary">{{ stock_data.symbol }}</h2>
+                                <span class="text-sm font-medium text-base-content/70">{{ stock_data.date.split('T')[0] }}</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-x-6 gap-y-4">
+                                <div>
+                                    <div class="text-sm text-base-content/70">Open</div>
+                                    <div class="text-lg font-semibold">{{ stock_data.open }}</div>
+                                </div>
+                                <div>
+                                    <div class="text-sm text-base-content/70">Close</div>
+                                    <div class="text-lg font-semibold">{{ stock_data.close }}</div>
+                                </div>
+                                <div>
+                                    <div class="text-sm text-base-content/70">High</div>
+                                    <div class="text-lg font-semibold">{{ stock_data.high }}</div>
+                                </div>
+                                <div>
+                                    <div class="text-sm text-base-content/70">Low</div>
+                                    <div class="text-lg font-semibold">{{ stock_data.low }}</div>
+                                </div>
+                                <div class="col-span-2">
+                                    <div class="text-sm text-base-content/70">Volume</div>
+                                    <div class="text-lg font-semibold">{{ "{:,.0f}".format(stock_data.volume) }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% elif error %}
+                    <div role="alert" class="alert alert-error">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span>{{ error }}</span>
+                    </div>
+                    {% else %}
+                    <div role="alert" class="alert">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-info shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span>Enter a symbol above to start.</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if not stock_data and not error %}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const enterBtn = document.getElementById('enter-btn');
+            const welcomeScreen = document.getElementById('welcome-screen');
+            const appContainer = document.getElementById('app-container');
+            const welcomeItems = document.querySelectorAll('.welcome-item');
+            welcomeItems.forEach(item => {
+                item.classList.add('animate-slide-fade-in');
+            });
+            enterBtn.addEventListener('click', () => {
+                welcomeScreen.style.opacity = '0';
+                welcomeScreen.style.transform = 'scale(1.1)';
+                welcomeScreen.style.pointerEvents = 'none';
+                appContainer.style.opacity = '1';
+                appContainer.style.transform = 'scale(1)';
+                appContainer.style.pointerEvents = 'auto';
+            });
+        });
+    </script>
+    {% endif %}
+
+</body>
+</html>
