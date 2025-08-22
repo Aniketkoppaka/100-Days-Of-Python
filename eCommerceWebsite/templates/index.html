@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block content %}
+<section class="text-center py-24 min-h-[60vh] flex flex-col justify-center items-center">
+    <h1 class="text-6xl font-bold text-white mb-4">The Soul of the Samurai</h1>
+    <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+        Authentic, mastercrafted blades forged with tradition and precision. Each piece embodies the spirit of the warrior.
+    </p>
+</section>
+
+<div class="space-y-32">
+    {% for product in products %}
+    <section class="fade-in-section grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div class="{% if loop.index is odd %}order-last{% endif %}">
+            <a href="{{ url_for('product', product_id=product.id) }}">
+                <img src="{{ url_for('static', filename='images/' + product.image_file) }}" alt="{{ product.name }}" class="w-full rounded-lg shadow-2xl shadow-black transform hover:scale-105 transition-transform duration-500">
+            </a>
+        </div>
+        <div class="text-center md:text-left">
+            <h2 class="text-4xl font-bold text-white mb-4">{{ product.name }}</h2>
+            <p class="text-lg text-gray-400 mb-6">{{ product.description }}</p>
+            <p class="text-3xl text-brand-red font-semibold mb-8">${{ "%.2f"|format(product.price) }}</p>
+            <a href="{{ url_for('product', product_id=product.id) }}" class="btn-primary">View Blade Details</a>
+        </div>
+    </section>
+    {% endfor %}
+</div>
+{% endblock %}
